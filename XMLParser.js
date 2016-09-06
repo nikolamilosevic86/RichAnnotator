@@ -39,11 +39,6 @@ function buildTree(xmlString){
 	return BuiltTree;
 }
 
-//Getting of XPath can be done by itterating through string from the selection to the top of the document, looking for the XML nodes and adding 
-//unclosed nodes as prepending the string and counting siblings that appeared before the selection.
-// Counting of siblings: It starts from selection and goes left.  If there are no siblings before next level tag, it checks right of the selection for siblings
-// In case there are siblings, 0 is added as order of the node. Every parent has to be checked for siblings as well. 
-// By doing this we won't support annotations of XML attributes, but for the first version it does not matter.
 function getXPath(start,end,txt){
 	var XPath = "";
 	var substrStart = 0;
@@ -81,24 +76,30 @@ function ReadSubTree(ParentNode,xmlSubstring,startPos,endPos)
 			nodeName+=xmlSubstring[i]
 		}
 		if(tagstart == true && (xmlSubstring[i]=='>' || xmlSubstring[i]==' ')){
-		startPos = offset+i;
+			while(xmlSubstring[i]!='>'){
+				i++;
+			}
+		startPos = offset+i+1;
 		hasChildNode = true;
 		break;
 		}
-		
+		pos = i+1;
 	}
 	if(hasChildNode){
 	var endPos = offset+	xmlSubstring.indexOf('</'+nodeName);
 	newNode = new TreeNode(originalXML.substring(startPos,endPos),nodeName,order,startIndex+startPos,startIndex+endPos,ParentNode);
-	pos = endPos+nodeName.length+2;
+	pos = endPos+nodeName.length+3;
 	ParentNode.children.push(newNode);
 	hasChildNode = false;
 	order++;
-	xmlSubstring = xmlSubstring.substring(endPos+nodeName.length+2,xmlSubstring.length);
-	offset = endPos+nodeName.length+2;
+	xmlSubstring = xmlSubstring.substring(endPos+nodeName.length+3,xmlSubstring.length);
+	offset = endPos+nodeName.length+3;
 	pos = 0;
 	}
-	//TODO: Process node
+	}
+	for(var j = 0;j<ParentNode.children.length;j++)
+	{
+		ReadSubTree(ParentNode.children[j],ParentNode.children[j].data,ParentNode.children[j].start,ParentNode.children[j].end);
 	}
 	
 	
