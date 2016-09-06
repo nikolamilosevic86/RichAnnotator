@@ -6,7 +6,9 @@ $(document).ready(function(){
 		var PTree = buildTree($( "#xmlinputarea" ).val())
 		
 		//getXPath(str,fin,$( "#xmlinputarea" ).val());
-        $("#xpathresulttextarea").append(PTree._root.data+'<br/>');
+		if(PTree !=null){
+        $("#xpathresulttextarea").append(PTree._root.nodeName+'<br/>');
+		}
 		//$("#xpathresulttextarea").append(str);
 		//$("#xpathresulttextarea").append(fin);
     });
@@ -30,7 +32,8 @@ function buildTree(xmlString){
 	}
 	var EndPos = xmlString.indexOf('</'+rootnodeName);
 		
-	var BuiltTree = new Tree(rootnodeName,xmlString.substring(startPos,EndPos),0,startPos,EndPos);
+	var BuiltTree = new Tree(xmlString.substring(startPos,EndPos),rootnodeName,0,startPos,EndPos);
+	ReadSubTree(BuiltTree._root,xmlString.substring(startPos,EndPos),startPos,EndPos);
 	
 	
 	return BuiltTree;
@@ -55,25 +58,68 @@ function getXPath(start,end,txt){
 //This function will probably be recursive in the loop
 function ReadSubTree(ParentNode,xmlSubstring,startPos,endPos)
 {
+	originalXML = xmlSubstring;
+	nodeName = '';
 	children = [];
+	tagstart = false;
+	finalIndex = endPos;
+	startIndex = startPos;
+	var pos = 0;
+	var offset = 0;
+	order = 0
+	hasChildNode = false;
+	while(pos<(xmlSubstring.length)){
+		nodeName = '';
+		tagstart = false;
+		hasChildNode = false;
+	for(var i=pos;i<xmlSubstring.length;i++){
+		if(xmlSubstring[i]=='<'){
+		tagstart = true;
+		continue;
+		}
+		if(tagstart == true && xmlSubstring[i]!='>' && xmlSubstring[i]!=' '){
+			nodeName+=xmlSubstring[i]
+		}
+		if(tagstart == true && (xmlSubstring[i]=='>' || xmlSubstring[i]==' ')){
+		startPos = offset+i;
+		hasChildNode = true;
+		break;
+		}
+		
+	}
+	if(hasChildNode){
+	var endPos = offset+	xmlSubstring.indexOf('</'+nodeName);
+	newNode = new TreeNode(originalXML.substring(startPos,endPos),nodeName,order,startIndex+startPos,startIndex+endPos,ParentNode);
+	pos = endPos+nodeName.length+2;
+	ParentNode.children.push(newNode);
+	hasChildNode = false;
+	order++;
+	xmlSubstring = xmlSubstring.substring(endPos+nodeName.length+2,xmlSubstring.length);
+	offset = endPos+nodeName.length+2;
+	pos = 0;
+	}
+	//TODO: Process node
+	}
+	
+	
 }
 
 //Making a tree probably need to be done recursevly. 
 // Add a node. Look for the child (from tag begin to end). Inside text recursevly look for children. 
 
-function TreeNode(data,Nodename,order,start,end,selected=false){
+function TreeNode(data,Nodename,order,start,end,parentNode,selected=false){
 	this.data = data;
 	this.start = start;
 	this.end = end;
 	this.nodeName = Nodename;
 	this.order= order;
-	this.parent = null;
+	this.parent = parentNode;
 	this.children = [];
 	selected = selected;
 }
 
 function Tree(data,NodeName,order,start,end) {
-    var pnode = new TreeNode(data,NodeName,order,start,end);
+    var pnode = new TreeNode(data,NodeName,order,null,start,end);
     this._root = pnode;
 }
 
