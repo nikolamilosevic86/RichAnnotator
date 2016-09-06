@@ -14,7 +14,7 @@ original position of the element in the XML string.
 
 Node datastructure is designed in the following manner: 
 
-```
+```javascript
 function TreeNode(data,Nodename,order,start,end,parentNode,selected=false){
 	this.data = data; // String between XML tags
 	this.start = start; // Start position in the original string
