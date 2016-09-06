@@ -23,6 +23,6 @@ function TreeNode(data,Nodename,order,start,end,parentNode,selected=false){
 	this.order= order; // order among the siblings
 	this.parent = parentNode; //Pointer to the parent node
 	this.children = []; // Array of the children nodes
-	selected = selected; // Whether it was selected for annotation
+	this.selected = selected; // Whether it was selected for annotation
 }
 ```

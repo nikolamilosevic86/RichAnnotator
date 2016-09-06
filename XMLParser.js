@@ -116,7 +116,7 @@ function TreeNode(data,Nodename,order,start,end,parentNode,selected=false){
 	this.order= order;
 	this.parent = parentNode;
 	this.children = [];
-	selected = selected;
+	this.selected = selected;
 }
 
 function Tree(data,NodeName,order,start,end) {
