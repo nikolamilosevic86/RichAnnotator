@@ -5,14 +5,13 @@ $(document).ready(function(){
 		var fin = getSelFinish();
 		var PTree = buildTree($( "#xmlinputarea" ).val())
 		
-		//getXPath(str,fin,$( "#xmlinputarea" ).val());
+		
 		if(PTree !=null){
-        $("#xpathresulttextarea").append(PTree._root.nodeName+'<br/>');
+        $("#xpathresulttextarea").append(getXPath(str,fin,PTree)+'<br/>');
 		}
-		//$("#xpathresulttextarea").append(str);
-		//$("#xpathresulttextarea").append(fin);
     });
 });
+
 
 function buildTree(xmlString){
 	if(xmlString[0]!='<'){
@@ -30,7 +29,7 @@ function buildTree(xmlString){
 		break;
 		}
 	}
-	var EndPos = xmlString.indexOf('</'+rootnodeName);
+	var EndPos = xmlString.indexOf('</'+rootnodeName+'>');
 		
 	var BuiltTree = new Tree(xmlString.substring(startPos,EndPos),rootnodeName,0,startPos,EndPos);
 	ReadSubTree(BuiltTree._root,xmlString.substring(startPos,EndPos),startPos,EndPos);
@@ -39,7 +38,7 @@ function buildTree(xmlString){
 	return BuiltTree;
 }
 
-function getXPath(start,end,txt){
+function getXPath(start,end,tree){
 	var XPath = "";
 	var substrStart = 0;
 	var FirstTag = false;
@@ -47,8 +46,28 @@ function getXPath(start,end,txt){
 	var siblingOrder = 0;
 	var isSibling = false;
 	var prevSiblingOrder = 0;
+	var found = false;
+	tree = tree._root;
+	
+	while(tree!=null){
+		if (tree.start<=start && tree.end>=end){
+			XPath+=tree.nodeName+'['+tree.order+']'+'/';
+		}
+		if(tree.children.length == 0)
+			break;
+		for (var k = 0; k< tree.children.length;k++){
+			var child = tree.children[k];
+			if(child.start<=start && child.end>=end){
+				tree = child;
+				break;
+			}
+		}
+	}
+	
+	
 	return XPath;
 }
+
 
 //This function will probably be recursive in the loop
 function ReadSubTree(ParentNode,xmlSubstring,startPos,endPos)
@@ -68,7 +87,7 @@ function ReadSubTree(ParentNode,xmlSubstring,startPos,endPos)
 		tagstart = false;
 		hasChildNode = false;
 	for(var i=pos;i<xmlSubstring.length;i++){
-		if(xmlSubstring[i]=='<'){
+		if(xmlSubstring[i]=='<' && xmlSubstring.substring(i,i+2)!='<?'){
 		tagstart = true;
 		continue;
 		}
@@ -86,13 +105,17 @@ function ReadSubTree(ParentNode,xmlSubstring,startPos,endPos)
 		pos = i+1;
 	}
 	if(hasChildNode){
-	var endPos = offset+	xmlSubstring.indexOf('</'+nodeName);
+	var EndPosWithoutOffset = xmlSubstring.indexOf('</'+nodeName+'>')
+	if(EndPosWithoutOffset == -1 || EndPosWithoutOffset == 0){
+		continue;
+	}
+	var endPos = offset+EndPosWithoutOffset;
 	newNode = new TreeNode(originalXML.substring(startPos,endPos),nodeName,order,startIndex+startPos,startIndex+endPos,ParentNode);
 	pos = endPos+nodeName.length+3;
 	ParentNode.children.push(newNode);
 	hasChildNode = false;
 	order++;
-	xmlSubstring = xmlSubstring.substring(endPos+nodeName.length+3,xmlSubstring.length);
+	xmlSubstring = xmlSubstring.substring(EndPosWithoutOffset+nodeName.length+3,xmlSubstring.length);
 	offset = endPos+nodeName.length+3;
 	pos = 0;
 	}
@@ -101,8 +124,6 @@ function ReadSubTree(ParentNode,xmlSubstring,startPos,endPos)
 	{
 		ReadSubTree(ParentNode.children[j],ParentNode.children[j].data,ParentNode.children[j].start,ParentNode.children[j].end);
 	}
-	
-	
 }
 
 //Making a tree probably need to be done recursevly. 
@@ -119,8 +140,10 @@ function TreeNode(data,Nodename,order,start,end,parentNode,selected=false){
 	this.selected = selected;
 }
 
+
+
 function Tree(data,NodeName,order,start,end) {
-    var pnode = new TreeNode(data,NodeName,order,null,start,end);
+    var pnode = new TreeNode(data,NodeName,order,start,end,null);
     this._root = pnode;
 }
 

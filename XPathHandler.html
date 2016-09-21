@@ -6,6 +6,8 @@
 <meta name="description" content="Online xpath generator that works clientside without sending data to the backend."/>
 <meta name="keywords" content="xml, xpath, generator, online" />
 <title>RichAnnotator</title>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"><script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="XMLParser.js"></script>
 <link type="text/css" rel="stylesheet" href="Xmltoolbox.css" />
@@ -47,6 +49,26 @@
             <br/>
                 Xpath results:
 	  			<div id="xpathresulttextarea"></div>
+				<div id="annotation">
+				<select name = "annotationtype" id= "annotype">
+					<option value="denotation">Denotation</option>
+					<option value="relation">Relation</option>
+					<option value="modification">Modification</option>
+				</select>
+				<br/><br/>
+				Subject: <input id="subject" name = "subj"/>
+				Predicate: <input id="predicate" name="pred"/>
+				Object: <input id="object" name="obj"/>
+				<br/><br/>
+				Document source: <select id = "source" name="docsource">
+					<option value="other">Other</option>
+					<option value="PMC">PMC</option>
+					<option value="DailyMed">DailyMed</option>
+				</select><br/>
+				Document ID: <input id="docid" name="document_id"/>
+				<br/><br/>
+				<button name="submit" id="submit_button" type="button">Submit data!</button>
+				</div> 
 	  			<br/>
             <div class="g-plusone"  data-size="medium" data-annotation="none"></div>
             <div class="g-follow" data-size="medium"  data-href="https://plus.google.com/107265834811049807780" data-rel="publisher"></div>
