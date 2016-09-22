@@ -14,6 +14,40 @@ body {
   height: 480px;
 }
 
+input#ann-text{
+	margin-left:20px;
+}
+input#ann-start{
+	margin-left:12px;
+}
+
+input#labelid{
+	margin-left:62px;
+}
+select#annotype{
+	margin-left:17px;
+}
+select#source{
+	margin-left:4px;
+}
+input#docid{
+	margin-left:32px;
+}
+
+input#object{
+	margin-left:73px;
+}
+input#predicate{
+	margin-left:55px;
+}
+input#subject{
+	margin-left:69px;
+}
+input#xpath{
+	margin-left:77px;
+}
+
+
 .highlights, textarea {
   padding: 10px;
   font: 20px/28px 'Open Sans', sans-serif;

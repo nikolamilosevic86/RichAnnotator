@@ -27,7 +27,26 @@ $(document).ready(function(){
 			$("#object-div").show();
 		}
 });
+
+$( "#annotate-submit" ).click(function(){
+	var annotation_span_start = $("#ann-start").val();
+	var annotation_span_end = $("#ann-end").val();
+	var selected_text = $("#ann-text").val();
+	var xpath = $("#xpath").val();
+	var label_id = $("#labelid").val();
+	var annotation_type = $("#annotype").val();
+	var subject = $("#subject").val();
+	var predicate = $("#predicate").val();
+	var object = $("#object").val();
+	var document_source = $("#source").val();
+	var document_id = $("#docid").val();
+});
     $( "#xmlinputarea" ).click(function(){
+		$("#labelid").val("");
+		$("#subject").val("");
+		$("#predicate").val("");
+		$("#object").val("");
+		
 		var sel = getSelStr();
 		var str = getSelStart();
 		var fin = getSelFinish();
