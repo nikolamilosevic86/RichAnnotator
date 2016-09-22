@@ -1,13 +1,43 @@
 $(document).ready(function(){
+	$("#subject-div").hide();
+	$("#predicate-div").hide();
+	$('#annotype').on('change', function() {
+		if($(this).val()=="denotation") // or $(this).val()
+		{
+			$("#object-div").show();
+			$("#subject-div").hide();
+			$("#predicate-div").hide();
+		}
+		if($(this).val()=="relation") // or $(this).val()
+		{
+			$("#subject-div").show();
+			$("#predicate-div").show();
+			$("#object-div").show();
+		}
+		if($(this).val()=="modification") // or $(this).val()
+		{
+			$("#subject-div").hide();
+			$("#predicate-div").hide();
+			$("#object-div").show();
+		}
+		if($(this).val()=="docannotation") // or $(this).val()
+		{
+			$("#subject-div").hide();
+			$("#predicate-div").hide();
+			$("#object-div").show();
+		}
+});
     $( "#xmlinputarea" ).click(function(){
 		var sel = getSelStr();
 		var str = getSelStart();
 		var fin = getSelFinish();
 		var PTree = buildTree($( "#xmlinputarea" ).val())
 		
-		
+		$("#ann-text").val(sel);
+		$("#ann-start").val(str);
+		$("#ann-end").val(fin);
 		if(PTree !=null){
-        $("#xpathresulttextarea").append(getXPath(str,fin,PTree)+'<br/>');
+        $("#xpath").val(getXPath(str,fin,PTree));
 		}
     });
 });
