@@ -48,6 +48,31 @@ def get_annotations():
         item = {'desc':desc,'start':start_ann,'end':end_ann}
         result_obj.append(item)
     return str(result_obj)
+
+
+@app.route('/getannotations_fromsource',methods = ['GET'])
+def get_annotations2():
+    project_id = int(request.args.get('project_id'))
+    document_source = request.args.get('document_source')
+    document_source_id = int(request.args.get('document_sourceid'))
+    con = mdb.connect('localhost', 'root', '', 'richannotator');
+    cur = con.cursor()
+    select_doc_id = "Select * from annotation inner join article on article.idArticle=annotation.Article_idArticle where article.Source = '%s' and article.SourceId='%d' and Project_idProject='%d' order by span_start desc"
+    try:    
+        cur.execute(select_doc_id % \
+                    (document_source,document_source_id,project_id))
+    except Exception, e:
+        print ('Failed!!: '+ str(e))
+    results = cur.fetchall()
+    result_obj = []
+    for row in results:
+        item = {};
+        desc = row[6]
+        start_ann = row[9]
+        end_ann = row[10]
+        item = {'desc':desc,'start':start_ann,'end':end_ann}
+        result_obj.append(item)
+    return str(result_obj)
     
 
 @app.route('/submitannotation', methods = ['POST'])
