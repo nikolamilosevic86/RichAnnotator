@@ -12,6 +12,7 @@ import MySQLdb as mdb
 import os
 import sys
 import json
+from test.test_xml_etree import methods
 
 static_folder_root = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 app = Flask(__name__)
@@ -23,6 +24,31 @@ def hello_world():
 @app.route('/index')
 def index(name=None):
     return render_template('index.html',name=name)
+
+
+@app.route('/getannotations',methods = ['GET'])
+def get_annotations():
+    project_id = int(request.args.get('project_id'))
+    document_id = int(request.args.get('document_id'))
+    con = mdb.connect('localhost', 'root', '', 'richannotator');
+    cur = con.cursor()
+    select_doc_id = "Select * from annotation where Article_idArticle='%d' and Project_idProject='%d' order by span_start desc"
+    try:    
+        cur.execute(select_doc_id % \
+                    (document_id,project_id))
+    except Exception, e:
+        print ('Failed!!: '+ str(e))
+    results = cur.fetchall()
+    result_obj = []
+    for row in results:
+        item = {};
+        desc = row[6]
+        start_ann = row[9]
+        end_ann = row[10]
+        item = {'desc':desc,'start':start_ann,'end':end_ann}
+        result_obj.append(item)
+    return str(result_obj)
+    
 
 @app.route('/submitannotation', methods = ['POST'])
 def submit_annotation():

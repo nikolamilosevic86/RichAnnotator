@@ -43,8 +43,8 @@ function handleScroll() {
 function fixIOS() {
   // iOS adds 3px of (unremovable) padding to the left and right of a textarea, so adjust highlights div to match
   $highlights.css({
-    'padding-left': '-=3px',
-    'padding-right': '-=3px'
+    'padding-left': '+=3px',
+    'padding-right': '+=3px'
   });
 }
 
