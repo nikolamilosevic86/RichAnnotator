@@ -40,6 +40,7 @@ def submit_annotation():
         
         document_id = -1 #To be obtained
         user_id = 1 # To be obtained
+        project_id = 1
         user_token = jso['token'] #''  To be generated in other method and transfer
         user_id = jso['user_id']
         select_doc_id = "Select idArticle from Article where Source='%s' and SourceId='%s'"
@@ -58,6 +59,8 @@ def submit_annotation():
             denotations = jso['denotations']
             for den in denotations:
                 ann_xpath = den['xpath']
+                ann_start_span = int(den['start_span'])
+                ann_end_span = int(den['end_span'])
                 ann_type = 'denotation'
                 ann_idLabel = den['id']
                 if('subj' not in den.keys()):
@@ -73,14 +76,16 @@ def submit_annotation():
                 else:    
                     ann_obj = den['obj']
         #ToDo: Check token
-                insert_annotations_sql = "Insert into Annotation (XPath,type,idLabel,subj,pred,obj,Article_idArticle,User_idUser) VALUES ('%s','%s','%s','%s','%s','%s',%d,%d)"
+                insert_annotations_sql = "Insert into Annotation (XPath,type,idLabel,subj,pred,obj,Article_idArticle,Project_idProject,span_start,span_end) VALUES ('%s','%s','%s','%s','%s','%s',%d,%d,%d,%d)"
                 cur.execute(insert_annotations_sql % \
-                    (ann_xpath,ann_type,ann_idLabel,ann_subj,ann_pred,ann_obj,document_id,user_id))
+                    (ann_xpath,ann_type,ann_idLabel,ann_subj,ann_pred,ann_obj,document_id,project_id,ann_start_span,ann_end_span))
                 con.commit()       
         if('relations' in jso.keys()):
             relations = jso['relations']
             for den in relations:
                 ann_xpath = ''
+                ann_start_span = -1
+                ann_end_span = -1
                 ann_type = 'relation'
                 ann_idLabel = den['id']
                 if('subj' not in den.keys()):
@@ -96,14 +101,16 @@ def submit_annotation():
                 else:    
                     ann_obj = den['obj']
         #ToDo: Check token
-                insert_annotations_sql = "Insert into Annotation (XPath,type,idLabel,subj,pred,obj,Article_idArticle,User_idUser) VALUES ('%s','%s','%s','%s','%s','%s',%d,%d)"
+                insert_annotations_sql = "Insert into Annotation (XPath,type,idLabel,subj,pred,obj,Article_idArticle,Project_idProject,span_start,span_end) VALUES ('%s','%s','%s','%s','%s','%s',%d,%d,%d,%d)"
                 cur.execute(insert_annotations_sql % \
-                    (ann_xpath,ann_type,ann_idLabel,ann_subj,ann_pred,ann_obj,document_id,user_id))
+                    (ann_xpath,ann_type,ann_idLabel,ann_subj,ann_pred,ann_obj,document_id,project_id,ann_start_span,ann_end_span))
                 con.commit()
         if('modifications' in jso.keys()):
             modifications = jso['modifications']
             for den in modifications:
                 ann_xpath = ''
+                ann_start_span = -1
+                ann_end_span = -1
                 ann_type = 'modification'
                 ann_idLabel = den['id']
                 if('subj' not in den.keys()):
@@ -119,9 +126,9 @@ def submit_annotation():
                 else:    
                     ann_obj = den['obj']
         #ToDo: Check token
-                insert_annotations_sql = "Insert into Annotation (XPath,type,idLabel,subj,pred,obj,Article_idArticle,User_idUser) VALUES ('%s','%s','%s','%s','%s','%s',%d,%d)"
+                insert_annotations_sql = "Insert into Annotation (XPath,type,idLabel,subj,pred,obj,Article_idArticle,Project_idProject,span_start,span_end) VALUES ('%s','%s','%s','%s','%s','%s',%d,%d,%d,%d)"
                 cur.execute(insert_annotations_sql % \
-                    (ann_xpath,ann_type,ann_idLabel,ann_subj,ann_pred,ann_obj,document_id,user_id))
+                    (ann_xpath,ann_type,ann_idLabel,ann_subj,ann_pred,ann_obj,document_id,project_id,ann_start_span,ann_end_span))
                 con.commit() 
     except Exception, e:
         print ('Failed!!: '+ str(e))

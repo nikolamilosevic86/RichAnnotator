@@ -50,7 +50,7 @@ $( "#annotate-submit" ).click(function(){
 			"user_id" : 1,
 			"token":"dasdas3fdsr42",
 			"xml":$( "#xmlinputarea" ).val(),
-			"denotations":[{"id":label_id,"xpath":xpath,"obj":object}]
+			"denotations":[{"id":label_id,"xpath":xpath,"obj":object,"start_span":annotation_span_start,"end_span":annotation_span_end}]
 		};
 	}
 	json2=JSON.stringify(json);
