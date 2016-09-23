@@ -23,11 +23,13 @@ $(document).ready(function(){
 		if($(this).val()=="docannotation") // or $(this).val()
 		{
 			$("#subject-div").hide();
-			$("#predicate-div").hide();
+			$("#predicate-div").show();
 			$("#object-div").show();
 		}
 });
 
+
+// Click button to submit to the backend. Uses ajax
 $( "#annotate-submit" ).click(function(){
 	var annotation_span_start = $("#ann-start").val();
 	var annotation_span_end = $("#ann-end").val();
@@ -40,6 +42,38 @@ $( "#annotate-submit" ).click(function(){
 	var object = $("#object").val();
 	var document_source = $("#source").val();
 	var document_id = $("#docid").val();
+	var json;
+	if (annotation_type=="denotation"){
+		json = {
+			"source": document_source,
+			"source_id": document_id,
+			"user_id" : 1,
+			"token":"dasdas3fdsr42",
+			"xml":$( "#xmlinputarea" ).val(),
+			"denotations":[{"id":label_id,"xpath":xpath,"obj":object}]
+		};
+	}
+	json2=JSON.stringify(json);
+	
+	
+	
+	$.ajax({
+        type: "POST",
+        url: "http://localhost:5000/submitannotation",
+        data: json2,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(response){
+        	console.log("success");
+        },
+        error: function(error) {
+            console.log(error);
+        }
+  });
+	
+	
+	
+	
 });
     $( "#xmlinputarea" ).click(function(){
 		$("#labelid").val("");
@@ -228,4 +262,8 @@ function getSelFinish() // javascript
     // obtain the index of the last selected character
     var finish = txtarea.selectionEnd;
 	return finish;
+}
+
+function SuccessAjax(data){
+	alert(data);
 }

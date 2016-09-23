@@ -16,7 +16,7 @@
     
     
     
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
 
     
     
@@ -32,7 +32,7 @@
   <textarea id = "xmlinputarea"><article><hello><nana>aa</nana><nana>bb</nana></hello><hello>nana</hello></article></textarea>
 </div>
 
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Annotate selected</button>
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" id="annotate-btn">Annotate selected</button>
 
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
@@ -87,8 +87,8 @@
 
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 
-        <script src="js/index.js"></script>
-		<script src="js/XMLParser.js"></script>
+        <script src="{{ url_for('static',filename='js/index.js') }}"></script>
+		<script src="{{ url_for('static',filename='js/XMLParser.js') }}"></script>
 
     
     

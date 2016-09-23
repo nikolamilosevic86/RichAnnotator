@@ -6,16 +6,23 @@ Created on Sep 21, 2016
 Created at the University of Manchester, School of Computer Science
 Licence GNU/GPL 3.0
 '''
-from flask import Flask
+from flask import Flask,current_app, render_template
 from flask import request
 import MySQLdb as mdb
+import os
 import sys
 import json
+
+static_folder_root = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
+
+@app.route('/index')
+def index(name=None):
+    return render_template('index.html',name=name)
 
 @app.route('/submitannotation', methods = ['POST'])
 def submit_annotation():
@@ -35,7 +42,7 @@ def submit_annotation():
         user_id = 1 # To be obtained
         user_token = jso['token'] #''  To be generated in other method and transfer
         user_id = jso['user_id']
-        select_doc_id = "Select idArticle from Article where Source='%s' and SourceId='%d'"
+        select_doc_id = "Select idArticle from Article where Source='%s' and SourceId='%s'"
         cur.execute(select_doc_id % \
                     (doc_source,doc_source_id))
         results = cur.fetchall()
@@ -47,7 +54,7 @@ def submit_annotation():
             con.commit()
             #cur.commit()
             document_id = cur.lastrowid
-        if('relations' in jso.keys()):
+        if('denotations' in jso.keys()):
             denotations = jso['denotations']
             for den in denotations:
                 ann_xpath = den['xpath']
@@ -119,7 +126,7 @@ def submit_annotation():
     except Exception, e:
         print ('Failed!!: '+ str(e))
         
-    return 'Hello, World!Annotations:'+jso["text"]
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 
 

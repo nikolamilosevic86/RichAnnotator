@@ -13,6 +13,9 @@ body {
   width: 860px;
   height: 480px;
 }
+#annotate-btn{
+	margin-left:240px;
+}
 
 input#ann-text{
 	margin-left:20px;
